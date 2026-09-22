@@ -1,0 +1,42 @@
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+client_secret*.json
+
+# SQLite database & local storage
+data/*.db
+data/*.db-shm
+data/*.db-wal
+!data/.gitkeep
+
+# Rust build target
+/target
+server/target
+
+# Node / Vite build target
+client/node_modules
+client/dist
+dist/
+dist-ssr/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# AI Assistant artifacts/cache
+.gemini/

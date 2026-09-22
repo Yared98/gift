@@ -1,0 +1,14 @@
+.git
+.gitignore
+.dockerignore
+.env
+.env.local
+.env.*.local
+*.json
+!client/package*.json
+data
+server/target
+client/node_modules
+client/dist
+.gemini
+*.log

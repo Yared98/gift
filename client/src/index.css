@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Fundos — creme aquecido, como papel artesanal */
+  --color-bg:                  #FAF7F2;
+  --color-surface:             #FFFFFF;
+  --color-surface-container:   #F4EFE8;
+  --color-surface-low:         #F7F3EE;
+
+  /* Textos — marrom orgânico, mais acolhedor que preto puro */
+  --color-on-surface:          #1E1A16;
+  --color-on-surface-variant:  #6B6157;
+
+  /* Bordas — bege natural */
+  --color-border:              #E5DDD3;
+  --color-border-subtle:       #EFE8DF;
+
+  /* Primária — Verde-sálvia profundo (confiança + natureza + afeto) */
+  --color-primary:             #2D5940;
+  --color-primary-hover:       #22452F;
+  --color-primary-container:   #EDF5EE;
+  --color-on-primary-container:#1A3D26;
+
+  /* Acento Âmbar — mel maduro (calor + generosidade, não "aviso") */
+  --color-accent-amber:        #B45309;
+  --color-accent-amber-subtle: #FEF3C7;
+
+  /* Favorito Rosé — ternura e intimidade */
+  --color-favorite:            #E11D48;
+  --color-favorite-subtle:     #FFF1F2;
+  --color-favorite-border:     #FECDD3;
+
+  /* Erro / Atenção */
+  --color-danger:              #DC2626;
+  --color-danger-subtle:       #FEF2F2;
+}
+
+.dark {
+  /* Fundos — verde-carvão profundo (jardim noturno, não preto azulado) */
+  --color-bg:                  #111714;
+  --color-surface:             #192019;
+  --color-surface-container:   #1F271F;
+  --color-surface-low:         #151C15;
+
+  /* Textos — creme natural, descansado para os olhos */
+  --color-on-surface:          #F0EBE3;
+  --color-on-surface-variant:  #9A9490;
+
+  /* Bordas — verde musgo escuro, mais distinto */
+  --color-border:              #2B3829;
+  --color-border-subtle:       #222D21;
+
+  /* Primária — Verde-menta vibrante (vitalidade no escuro) */
+  --color-primary:             #52C27E;
+  --color-primary-hover:       #45B36F;
+  --color-primary-container:   #1B3320;
+  --color-on-primary-container:#A8EFCA;
+
+  /* Acento Âmbar — dourado aquecido */
+  --color-accent-amber:        #F59E0B;
+  --color-accent-amber-subtle: #3D2D10;
+
+  /* Favorito Rosé — mais suave no escuro */
+  --color-favorite:            #FB7185;
+  --color-favorite-subtle:     #3B1220;
+  --color-favorite-border:     #9F1239;
+
+  /* Erro / Atenção */
+  --color-danger:              #F87171;
+  --color-danger-subtle:       #3B1313;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-on-surface);
+}
