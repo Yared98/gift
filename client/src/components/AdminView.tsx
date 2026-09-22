@@ -1069,7 +1069,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
           </div>
 
           {profileSuccess && (
-            <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs rounded-xl flex items-center gap-2">
+            <div className="max-w-2xl p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs rounded-xl flex items-center gap-2">
               <Check className="w-4 h-4 shrink-0" />
               <span>{profileSuccess}</span>
             </div>
@@ -1077,7 +1077,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
           {/* Install Mobile PWA Banner */}
           {!isStandalone && onOpenInstallModal && (
-            <div className="p-4 rounded-2xl bg-surface-low border border-border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="max-w-2xl p-4 rounded-2xl bg-surface-low border border-border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
                   <Smartphone className="w-5 h-5" />
