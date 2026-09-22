@@ -1,0 +1,23 @@
+name: Continuous Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy Gift Container
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Sync and Restart Docker Container
+        run: |
+          mkdir -p /opt/gift
+          rsync -av --exclude='.env' --exclude='data' ./ /opt/gift/
+          cd /opt/gift
+          docker compose build
+          docker compose up -d
