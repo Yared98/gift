@@ -390,19 +390,10 @@ pub async fn update_user_interests(
     Ok(Json(json!({ "success": true })))
 }
 
-// User: Scrape Link
+// Scrape Link (supports authenticated admin and unauthenticated PWA share previews)
 pub async fn scrape_link(
-    State(pool): State<DbPool>,
-    headers: HeaderMap,
     Json(payload): Json<ScrapePayload>,
 ) -> Result<Json<serde_json::Value>, (StatusCode, Json<serde_json::Value>)> {
-    let _ = authenticate_user_from_headers(&headers, &pool).map_err(|_| {
-        (
-            StatusCode::UNAUTHORIZED,
-            Json(json!({ "error": "Não autorizado." })),
-        )
-    })?;
-
     match scrape_product_url(&payload.url).await {
         Ok(data) => Ok(Json(json!(data))),
         Err(e) => Err((

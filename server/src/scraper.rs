@@ -3,20 +3,37 @@ use scraper::{Html, Selector};
 use std::time::Duration;
 
 const SOCIAL_UA: &str = "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)";
-const BROWSER_UA: &str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36";
+const WHATSAPP_UA: &str = "WhatsApp/2.21.4.13 A";
+const BROWSER_UA: &str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36";
+
+fn is_challenge_page(html: &str) -> bool {
+    html.is_empty()
+        || html.contains("account-verification")
+        || html.contains("cf-browser-verification")
+        || html.contains("cf-challenge")
+        || html.contains("Continuando para a loja")
+        || html.contains("pow_nonce")
+        || html.contains("solvePow")
+}
 
 pub async fn scrape_product_url(target_url: &str) -> Result<ScrapeResponse, String> {
-    // 1. First attempt: Use Social Bot UA (Mercado Livre, Amazon, Shopee bypass anti-bot and serve OpenGraph tags)
-    let mut html_content = fetch_html(target_url, SOCIAL_UA).await.unwrap_or_default();
+    // 1. First attempt: Use WhatsApp crawler UA (bypasses CloudFront, wBuy, e-commerces)
+    let mut html_content = fetch_html(target_url, WHATSAPP_UA).await.unwrap_or_default();
 
-    // 2. If social bot was blocked or redirected to verification, fallback to Desktop Chrome UA
-    if html_content.is_empty()
-        || html_content.contains("account-verification")
-        || html_content.contains("cf-browser-verification")
-    {
-        if let Ok(fallback_html) = fetch_html(target_url, BROWSER_UA).await {
-            if !fallback_html.is_empty() {
-                html_content = fallback_html;
+    // 2. If WhatsApp failed or got challenge, try Facebook externalhit (Mercado Livre, Amazon)
+    if is_challenge_page(&html_content) {
+        if let Ok(social_html) = fetch_html(target_url, SOCIAL_UA).await {
+            if !is_challenge_page(&social_html) {
+                html_content = social_html;
+            }
+        }
+    }
+
+    // 3. If still empty or challenged, fallback to full Desktop Chrome UA
+    if is_challenge_page(&html_content) {
+        if let Ok(browser_html) = fetch_html(target_url, BROWSER_UA).await {
+            if !browser_html.is_empty() {
+                html_content = browser_html;
             }
         }
     }

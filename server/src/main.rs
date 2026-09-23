@@ -75,6 +75,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/api/user/profile", put(routes::update_user_profile))
         .route("/api/user/interests", get(routes::get_user_interests).put(routes::update_user_interests))
         .route("/api/user/scrape", post(routes::scrape_link))
+        .route("/api/scrape", post(routes::scrape_link))
         // Super-admin routes
         .route("/api/admin/users", get(routes::admin_list_users))
         .route("/api/admin/users/:id/approve", post(routes::admin_approve_user))
