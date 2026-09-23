@@ -295,6 +295,18 @@ pub async fn get_user_gifts(
     Ok(Json(json!({ "gifts": gifts })))
 }
 
+fn normalize_category(cat: &str) -> String {
+    let trimmed = cat.trim();
+    if trimmed.is_empty() {
+        return "Outros".to_string();
+    }
+    let mut chars = trimmed.chars();
+    match chars.next() {
+        None => "Outros".to_string(),
+        Some(first) => first.to_uppercase().collect::<String>() + chars.as_str(),
+    }
+}
+
 // User: Create Gift
 pub async fn create_user_gift(
     State(pool): State<DbPool>,
@@ -303,6 +315,8 @@ pub async fn create_user_gift(
 ) -> Result<Json<serde_json::Value>, StatusCode> {
     let user = authenticate_user_from_headers(&headers, &pool)?;
     let conn = pool.lock().unwrap();
+
+    let category = normalize_category(&payload.category);
 
     let id = db::create_user_gift(
         &conn,
@@ -313,7 +327,7 @@ pub async fn create_user_gift(
         payload.price,
         &payload.currency,
         payload.priority,
-        &payload.category,
+        &category,
         &payload.notes,
     )
     .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
@@ -331,6 +345,8 @@ pub async fn update_user_gift(
     let user = authenticate_user_from_headers(&headers, &pool)?;
     let conn = pool.lock().unwrap();
 
+    let category = normalize_category(&payload.category);
+
     db::update_user_gift(
         &conn,
         gift_id,
@@ -341,7 +357,7 @@ pub async fn update_user_gift(
         payload.price,
         &payload.currency,
         payload.priority,
-        &payload.category,
+        &category,
         &payload.notes,
     )
     .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;

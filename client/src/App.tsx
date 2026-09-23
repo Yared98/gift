@@ -196,13 +196,19 @@ export function AppContent() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, [fetchPublicData]);
 
-  // Dynamic Categories from available gifts
+  // Dynamic Categories from available gifts (case-insensitive deduplication, canonical title casing)
   const categories = useMemo(() => {
-    const set = new Set<string>();
+    const catMap = new Map<string, string>();
     gifts.forEach((g) => {
-      if (g.category) set.add(g.category);
+      const trimmed = (g.category || '').trim();
+      if (trimmed) {
+        const lower = trimmed.toLowerCase();
+        if (!catMap.has(lower)) {
+          catMap.set(lower, trimmed.charAt(0).toUpperCase() + trimmed.slice(1));
+        }
+      }
     });
-    return Array.from(set);
+    return Array.from(catMap.values());
   }, [gifts]);
 
   // Filtered & Sorted Gifts
@@ -217,7 +223,7 @@ export function AppContent() {
           if (!matchTitle && !matchCat && !matchNotes) return false;
         }
 
-        if (category !== 'all' && gift.category !== category) return false;
+        if (category !== 'all' && gift.category.trim().toLowerCase() !== category.trim().toLowerCase()) return false;
         if (priceFilter === 'under-50' && gift.price > 50) return false;
         if (priceFilter === '50-150' && (gift.price < 50 || gift.price > 150)) return false;
         if (priceFilter === '150-300' && (gift.price < 150 || gift.price > 300)) return false;
@@ -497,6 +503,7 @@ export function AppContent() {
         rawSharedText={rawSharedText}
         currentUser={currentUser}
         authToken={authToken}
+        availableCategories={categories}
         onClose={() => setIsQuickAddOpen(false)}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
         onGiftAdded={() => {

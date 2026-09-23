@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Sparkles,
   X,
@@ -19,6 +19,7 @@ interface QuickAddModalProps {
   onClose: () => void;
   onOpenAuthModal: () => void;
   onGiftAdded: () => void;
+  availableCategories?: string[];
 }
 
 export const extractUrlFromText = (text: string): string => {
@@ -35,6 +36,7 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
   onClose,
   onOpenAuthModal,
   onGiftAdded,
+  availableCategories = [],
 }) => {
   const [productUrl, setProductUrl] = useState('');
   const [title, setTitle] = useState('');
@@ -42,6 +44,7 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
   const [price, setPrice] = useState('');
   const [priority, setPriority] = useState<number>(2);
   const [category, setCategory] = useState('Tech & Games');
+  const [customCategory, setCustomCategory] = useState('');
   const [notes, setNotes] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
@@ -49,17 +52,57 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
   const [error, setError] = useState('');
   const [savedSuccess, setSavedSuccess] = useState(false);
 
-  const standardCategories = [
+  const BASE_CATEGORIES = [
     'Tech & Games',
     'Livros',
     'Casa & Café',
     'Vestuário',
     'Hobbies',
-    'Outros',
   ];
+
+  const allCategories = useMemo(() => {
+    const catMap = new Map<string, string>();
+    BASE_CATEGORIES.forEach((c) => catMap.set(c.toLowerCase(), c));
+
+    (availableCategories || []).forEach((c) => {
+      const trimmed = (c || '').trim();
+      if (trimmed && trimmed.toLowerCase() !== 'outros') {
+        const lower = trimmed.toLowerCase();
+        if (!catMap.has(lower)) {
+          catMap.set(lower, trimmed.charAt(0).toUpperCase() + trimmed.slice(1));
+        }
+      }
+    });
+
+    return [...Array.from(catMap.values()), 'Outros'];
+  }, [availableCategories]);
 
   useEffect(() => {
     if (!isOpen || !rawSharedText) return;
+
+    if (rawSharedText.startsWith('{') && rawSharedText.endsWith('}')) {
+      try {
+        const parsed = JSON.parse(rawSharedText);
+        if (parsed.title) setTitle(parsed.title);
+        if (parsed.productUrl) setProductUrl(parsed.productUrl);
+        if (parsed.imageUrl) setImageUrl(parsed.imageUrl);
+        if (parsed.price) setPrice(parsed.price);
+        if (parsed.priority) setPriority(parsed.priority);
+        if (parsed.category) {
+          const matched = allCategories.find((c) => c.toLowerCase() === (parsed.category as string).toLowerCase());
+          if (matched && matched !== 'Outros') {
+            setCategory(matched);
+            setCustomCategory('');
+          } else {
+            setCategory('Outros');
+            setCustomCategory(parsed.category);
+          }
+        }
+        if (parsed.notes) setNotes(parsed.notes);
+        sessionStorage.removeItem('pending_quick_add');
+        return;
+      } catch (_) {}
+    }
 
     const extracted = extractUrlFromText(rawSharedText);
     setProductUrl(extracted);
@@ -115,9 +158,24 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
     setIsSaving(true);
     setError('');
 
+    let finalCategory = category;
+    if (category === 'Outros') {
+      const trimmed = customCategory.trim();
+      if (trimmed) {
+        const match = allCategories.find((c) => c.toLowerCase() === trimmed.toLowerCase());
+        if (match && match !== 'Outros') {
+          finalCategory = match;
+        } else {
+          finalCategory = trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+        }
+      } else {
+        finalCategory = 'Outros';
+      }
+    }
+
     try {
       const parsedPrice = price ? parseFloat(price.replace(/\./g, '').replace(',', '.')) : 0.0;
-      const res = await fetch('/api/gifts', {
+      const res = await fetch('/api/user/gifts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -129,7 +187,7 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
           image_url: imageUrl.trim(),
           price: isNaN(parsedPrice) ? 0.0 : parsedPrice,
           priority,
-          category,
+          category: finalCategory,
           notes: notes.trim(),
         }),
       });
@@ -313,15 +371,29 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
                 </label>
                 <select
                   value={category}
-                  onChange={(e) => setCategory(e.target.value)}
+                  onChange={(e) => {
+                    setCategory(e.target.value);
+                    if (e.target.value !== 'Outros') {
+                      setCustomCategory('');
+                    }
+                  }}
                   className="w-full h-9 px-3 bg-surface-low border border-border rounded-lg text-xs text-on-surface focus:outline-none focus:border-primary"
                 >
-                  {standardCategories.map((c) => (
+                  {allCategories.map((c) => (
                     <option key={c} value={c}>
                       {c}
                     </option>
                   ))}
                 </select>
+                {category === 'Outros' && (
+                  <input
+                    type="text"
+                    value={customCategory}
+                    onChange={(e) => setCustomCategory(e.target.value)}
+                    placeholder="Especifique a categoria..."
+                    className="w-full h-9 px-3 mt-2 bg-surface-low border border-border rounded-lg text-xs text-on-surface focus:outline-none focus:border-primary"
+                  />
+                )}
               </div>
 
               {/* Notes / Observations */}
@@ -349,9 +421,11 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
                     <button
                       type="button"
                       onClick={() => {
-                        // Keep product info in state/storage so user can resume
+                        const effectiveCategory = category === 'Outros' && customCategory.trim()
+                          ? (allCategories.find((c) => c.toLowerCase() === customCategory.trim().toLowerCase()) || (customCategory.trim().charAt(0).toUpperCase() + customCategory.trim().slice(1)))
+                          : category;
                         sessionStorage.setItem('pending_quick_add', JSON.stringify({
-                          title, productUrl, imageUrl, price, priority, category, notes
+                          title, productUrl, imageUrl, price, priority, category: effectiveCategory, notes
                         }));
                         onOpenAuthModal();
                       }}

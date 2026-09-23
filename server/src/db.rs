@@ -167,6 +167,27 @@ pub fn init_db(db_path: &str) -> Result<DbPool> {
         let _ = conn.execute("UPDATE gifts SET user_id = 1 WHERE user_id IS NULL OR user_id = 0", []);
     }
 
+    // Normalize existing categories: trim and capitalize first character
+    if let Ok(mut cat_stmt) = conn.prepare("SELECT id, category FROM gifts") {
+        let gifts_cats: Vec<(i64, String)> = cat_stmt
+            .query_map([], |row| Ok((row.get(0)?, row.get(1)?)))
+            .map(|rows| rows.filter_map(|r| r.ok()).collect())
+            .unwrap_or_default();
+
+        for (id, cat) in gifts_cats {
+            let trimmed = cat.trim();
+            if !trimmed.is_empty() {
+                let mut chars = trimmed.chars();
+                if let Some(first) = chars.next() {
+                    if first.is_lowercase() {
+                        let normalized = first.to_uppercase().collect::<String>() + chars.as_str();
+                        let _ = conn.execute("UPDATE gifts SET category = ?1 WHERE id = ?2", params![normalized, id]);
+                    }
+                }
+            }
+        }
+    }
+
     Ok(Arc::new(Mutex::new(conn)))
 }
 

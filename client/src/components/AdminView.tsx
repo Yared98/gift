@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Sparkles,
   Plus,
@@ -142,14 +142,30 @@ export const AdminView: React.FC<AdminViewProps> = ({
     }
   }, [user]);
 
-  const standardCategories = [
+  const BASE_CATEGORIES = [
     'Tech & Games',
     'Livros',
     'Casa & Café',
     'Vestuário',
     'Hobbies',
-    'Outros',
   ];
+
+  const availableCategories = useMemo(() => {
+    const catMap = new Map<string, string>();
+    BASE_CATEGORIES.forEach((c) => catMap.set(c.toLowerCase(), c));
+
+    gifts.forEach((g) => {
+      const trimmed = (g.category || '').trim();
+      if (trimmed && trimmed.toLowerCase() !== 'outros') {
+        const lower = trimmed.toLowerCase();
+        if (!catMap.has(lower)) {
+          catMap.set(lower, trimmed.charAt(0).toUpperCase() + trimmed.slice(1));
+        }
+      }
+    });
+
+    return [...Array.from(catMap.values()), 'Outros'];
+  }, [gifts]);
 
   useEffect(() => {
     loadUserData();
@@ -222,7 +238,22 @@ export const AdminView: React.FC<AdminViewProps> = ({
     if (!title.trim()) return;
 
     setIsSubmitting(true);
-    const finalCategory = category === 'Outros' && customCategory.trim() ? customCategory.trim() : category;
+    let finalCategory = category;
+    if (category === 'Outros') {
+      const trimmed = customCategory.trim();
+      if (trimmed) {
+        const match = availableCategories.find(
+          (c) => c.toLowerCase() === trimmed.toLowerCase()
+        );
+        if (match && match !== 'Outros') {
+          finalCategory = match;
+        } else {
+          finalCategory = trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+        }
+      } else {
+        finalCategory = 'Outros';
+      }
+    }
 
     const payload = {
       title: title.trim(),
@@ -267,11 +298,15 @@ export const AdminView: React.FC<AdminViewProps> = ({
     setPrice(gift.price > 0 ? gift.price.toString() : '');
     setPriority(gift.priority);
     setNotes(gift.notes);
-    if (standardCategories.includes(gift.category)) {
-      setCategory(gift.category);
+    const matched = availableCategories.find(
+      (c) => c.toLowerCase() === (gift.category || '').trim().toLowerCase()
+    );
+    if (matched && matched !== 'Outros') {
+      setCategory(matched);
+      setCustomCategory('');
     } else {
       setCategory('Outros');
-      setCustomCategory(gift.category);
+      setCustomCategory(gift.category || '');
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -300,7 +335,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
     setImageUrl('');
     setPrice('');
     setPriority(2);
-    setCategory('Tech & Games');
+    setCategory(availableCategories[0] || 'Tech & Games');
     setCustomCategory('');
     setNotes('');
     setScrapeError('');
@@ -757,10 +792,15 @@ export const AdminView: React.FC<AdminViewProps> = ({
                   </label>
                   <select
                     value={category}
-                    onChange={(e) => setCategory(e.target.value)}
+                    onChange={(e) => {
+                      setCategory(e.target.value);
+                      if (e.target.value !== 'Outros') {
+                        setCustomCategory('');
+                      }
+                    }}
                     className="w-full h-10 px-3 bg-surface-low border border-border rounded-xl text-sm text-on-surface focus:outline-none focus:border-primary cursor-pointer"
                   >
-                    {standardCategories.map((c) => (
+                    {availableCategories.map((c) => (
                       <option key={c} value={c}>
                         {c}
                       </option>
@@ -885,7 +925,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
                               : 'Sob consulta'}
                           </span>
                           <span>•</span>
-                          <span>{item.category}</span>
+                          <span>{item.category ? item.category.charAt(0).toUpperCase() + item.category.slice(1) : ''}</span>
                           {item.notes && (
                             <>
                               <span>•</span>
