@@ -508,106 +508,106 @@ export const AdminView: React.FC<AdminViewProps> = ({
   const isSuperAdmin = user.role === 'SUPER_ADMIN';
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Top Header Row */}
-      <div className="bg-surface rounded-2xl p-6 border border-border shadow-paper flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-serif text-lg font-bold shrink-0">
+      <div className="bg-surface rounded-2xl p-4 sm:p-6 border border-border shadow-paper flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-serif text-base sm:text-lg font-bold shrink-0">
             {user.name.charAt(0).toUpperCase()}
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="font-serif text-2xl font-semibold text-on-surface">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h2 className="font-serif text-xl sm:text-2xl font-semibold text-on-surface truncate">
                 Olá, {user.name}
               </h2>
               {isSuperAdmin && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold bg-primary text-white">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold bg-primary text-white shrink-0">
                   <Shield className="w-3 h-3" />
                   Super-Admin
                 </span>
               )}
             </div>
-            <p className="text-xs text-on-surface-variant font-mono mt-0.5">
+            <p className="text-[11px] sm:text-xs text-on-surface-variant font-mono mt-0.5 truncate">
               {user.email} • <span className="text-primary font-semibold">/u/{user.slug}</span>
             </p>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5">
+        <div className="w-full sm:w-auto grid grid-cols-[1fr_1fr_auto] sm:flex sm:items-center gap-2">
           <button
             onClick={onBackToPublic}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-low border border-border text-on-surface text-xs sm:text-sm font-medium hover:bg-surface-container transition-all"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl bg-surface-low border border-border text-on-surface text-xs sm:text-sm font-medium hover:bg-surface-container transition-all active:scale-[0.98]"
           >
-            <Eye className="w-4 h-4 text-primary" />
-            <span>Ver Minha Lista</span>
+            <Eye className="w-4 h-4 text-primary shrink-0" />
+            <span className="truncate">Ver Lista</span>
           </button>
 
           <button
             onClick={copyShareUrl}
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-primary text-white text-xs sm:text-sm font-medium hover:bg-primary-hover shadow-sm transition-all"
+            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 sm:py-2 rounded-xl bg-primary text-white text-xs sm:text-sm font-medium hover:bg-primary-hover shadow-sm transition-all active:scale-[0.98]"
           >
-            {copiedToken ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-            <span>Copiar Link</span>
+            {copiedToken ? <Check className="w-4 h-4 shrink-0" /> : <Copy className="w-4 h-4 shrink-0" />}
+            <span className="truncate">{copiedToken ? 'Copiado!' : 'Copiar Link'}</span>
           </button>
 
           <button
             onClick={onLogout}
             title="Sair da conta"
-            className="p-2 rounded-xl border border-border text-on-surface-variant hover:text-red-500 hover:bg-red-500/10 transition-colors"
+            className="w-10 h-10 sm:w-9 sm:h-9 flex items-center justify-center rounded-xl border border-border text-on-surface-variant hover:text-red-500 hover:bg-red-500/10 transition-colors shrink-0"
           >
             <LogOut className="w-4 h-4" />
           </button>
         </div>
       </div>
 
-      {/* Main Admin Navigation Tabs */}
-      <div className="flex flex-wrap gap-2 p-1.5 bg-surface rounded-2xl border border-border shadow-sm max-w-2xl">
+      {/* Main Admin Navigation Tabs (Single row, responsive scroll on mobile, no broken wrap) */}
+      <div className="w-full sm:w-auto inline-flex items-center gap-1.5 p-1.5 bg-surface rounded-2xl border border-border shadow-sm overflow-x-auto no-scrollbar scroll-smooth">
         <button
           onClick={() => setActiveTab('gifts')}
-          className={`flex items-center gap-2 py-2 px-4 rounded-xl text-xs sm:text-sm font-medium transition-all ${
+          className={`flex items-center gap-2 py-2 px-3.5 sm:px-4 rounded-xl text-xs sm:text-sm font-medium shrink-0 whitespace-nowrap transition-all ${
             activeTab === 'gifts'
               ? 'bg-primary text-white shadow-sm'
               : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-low'
           }`}
         >
-          <GiftIcon className="w-4 h-4" />
+          <GiftIcon className="w-4 h-4 shrink-0" />
           <span>Meus Presentes ({gifts.length})</span>
         </button>
 
         <button
           onClick={() => setActiveTab('interests')}
-          className={`flex items-center gap-2 py-2 px-4 rounded-xl text-xs sm:text-sm font-medium transition-all ${
+          className={`flex items-center gap-2 py-2 px-3.5 sm:px-4 rounded-xl text-xs sm:text-sm font-medium shrink-0 whitespace-nowrap transition-all ${
             activeTab === 'interests'
               ? 'bg-primary text-white shadow-sm'
               : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-low'
           }`}
         >
-          <HeartHandshake className="w-4 h-4" />
+          <HeartHandshake className="w-4 h-4 shrink-0" />
           <span>Gostos & Inspirações</span>
         </button>
 
         <button
           onClick={() => setActiveTab('profile')}
-          className={`flex items-center gap-2 py-2 px-4 rounded-xl text-xs sm:text-sm font-medium transition-all ${
+          className={`flex items-center gap-2 py-2 px-3.5 sm:px-4 rounded-xl text-xs sm:text-sm font-medium shrink-0 whitespace-nowrap transition-all ${
             activeTab === 'profile'
               ? 'bg-primary text-white shadow-sm'
               : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-low'
           }`}
         >
-          <SettingsIcon className="w-4 h-4" />
+          <SettingsIcon className="w-4 h-4 shrink-0" />
           <span>Meu Link & Perfil</span>
         </button>
 
         {isSuperAdmin && (
           <button
             onClick={() => setActiveTab('users')}
-            className={`flex items-center gap-2 py-2 px-4 rounded-xl text-xs sm:text-sm font-medium transition-all ${
+            className={`flex items-center gap-2 py-2 px-3.5 sm:px-4 rounded-xl text-xs sm:text-sm font-medium shrink-0 whitespace-nowrap transition-all ${
               activeTab === 'users'
                 ? 'bg-primary text-white shadow-sm'
                 : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-low'
             }`}
           >
-            <Users className="w-4 h-4" />
+            <Users className="w-4 h-4 shrink-0" />
             <span>Usuários & Convites</span>
           </button>
         )}
@@ -1117,20 +1117,20 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
           {/* Install Mobile PWA Banner */}
           {!isStandalone && onOpenInstallModal && (
-            <div className="max-w-2xl p-4 rounded-2xl bg-surface-low border border-border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="max-w-2xl p-4 sm:p-5 rounded-2xl bg-surface-low border border-border flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
                   <Smartphone className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-semibold text-on-surface">Instalar Aplicativo no Celular</h4>
-                  <p className="text-[11px] text-on-surface-variant">Compartilhe produtos direto da Amazon e Mercado Livre para sua lista com 1 toque.</p>
+                  <h4 className="text-xs sm:text-sm font-semibold text-on-surface">Instalar Aplicativo no Celular</h4>
+                  <p className="text-[11px] sm:text-xs text-on-surface-variant">Compartilhe produtos direto da Amazon e Mercado Livre para sua lista com 1 toque.</p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={onOpenInstallModal}
-                className="px-3.5 py-1.5 bg-primary text-white rounded-xl text-xs font-semibold hover:bg-primary-hover transition-all flex items-center gap-1.5 self-start sm:self-auto shadow-xs shrink-0"
+                className="px-4 py-2 bg-primary text-white rounded-xl text-xs font-semibold hover:bg-primary-hover transition-all flex items-center justify-center gap-1.5 shadow-xs w-full sm:w-auto shrink-0"
               >
                 <Smartphone className="w-3.5 h-3.5" />
                 <span>Instalar App</span>
@@ -1157,8 +1157,8 @@ export const AdminView: React.FC<AdminViewProps> = ({
                 <label className="block text-xs font-semibold text-on-surface-variant uppercase mb-1">
                   Slug da URL Pública
                 </label>
-                <div className="flex items-center">
-                  <span className="px-3 h-10 bg-surface-low border border-r-0 border-border rounded-l-xl text-xs text-on-surface-variant flex items-center font-mono">
+                <div className="flex items-center h-10 bg-surface-low border border-border rounded-xl focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all overflow-hidden">
+                  <span className="px-3 text-xs font-mono text-on-surface-variant/80 bg-surface/50 border-r border-border/60 h-full flex items-center select-none shrink-0">
                     /u/
                   </span>
                   <input
@@ -1166,7 +1166,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
                     required
                     value={slugInput}
                     onChange={(e) => setSlugInput(e.target.value)}
-                    className="flex-1 h-10 px-3 bg-surface-low border border-border rounded-r-xl text-sm font-mono text-on-surface focus:outline-none focus:border-primary"
+                    className="flex-1 h-full px-3 bg-transparent text-sm font-mono text-on-surface focus:outline-none"
                   />
                 </div>
               </div>
@@ -1213,7 +1213,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
                 </div>
 
                 {/* Tab Switcher: Paletas Prontas vs Tema Personalizado */}
-                <div className="flex items-center gap-1 p-1 bg-surface-low border border-border rounded-xl self-start sm:self-auto">
+                <div className="grid grid-cols-2 sm:flex items-center gap-1 p-1 bg-surface-low border border-border rounded-xl w-full sm:w-auto">
                   <button
                     type="button"
                     onClick={() => {
@@ -1224,7 +1224,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
                         applyTheme(defaultId);
                       }
                     }}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium text-center transition-all ${
                       themeModeTab === 'presets'
                         ? 'bg-surface text-on-surface shadow-xs font-semibold'
                         : 'text-on-surface-variant hover:text-on-surface'
@@ -1241,14 +1241,14 @@ export const AdminView: React.FC<AdminViewProps> = ({
                       setThemeInput(formatted);
                       applyTheme(formatted);
                     }}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center justify-center gap-1.5 transition-all ${
                       themeModeTab === 'custom'
                         ? 'bg-surface text-on-surface shadow-xs font-semibold text-primary'
                         : 'text-on-surface-variant hover:text-on-surface'
                     }`}
                   >
                     <Sparkles className="w-3.5 h-3.5 text-accent-amber" />
-                    <span>Tema Personalizado</span>
+                    <span>Personalizado</span>
                   </button>
                 </div>
               </div>
@@ -1265,7 +1265,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
                   </p>
                 </div>
 
-                <div className="flex items-center gap-1.5 bg-surface border border-border p-1 rounded-xl shrink-0">
+                <div className="grid grid-cols-3 sm:flex items-center gap-1 bg-surface border border-border p-1 rounded-xl w-full sm:w-auto shrink-0">
                   <button
                     type="button"
                     onClick={() => {
@@ -1273,14 +1273,14 @@ export const AdminView: React.FC<AdminViewProps> = ({
                       const next = setThemeDisplayMode(themeInput, 'auto');
                       setThemeInput(next);
                     }}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
+                    className={`px-2 py-1.5 rounded-lg text-xs font-medium transition-all text-center justify-center flex items-center ${
                       displayModeInput === 'auto'
                         ? 'bg-primary text-white shadow-xs font-semibold'
                         : 'text-on-surface-variant hover:text-on-surface'
                     }`}
                     title="Segue a preferência do dispositivo ou navegador do convidado"
                   >
-                    🌓 Automático
+                    <span>🌓 Auto</span>
                   </button>
 
                   <button
@@ -1291,7 +1291,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
                       setThemeInput(next);
                       setGlobalTheme('light');
                     }}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all flex items-center gap-1 ${
+                    className={`px-2 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-1 text-center ${
                       displayModeInput === 'light'
                         ? 'bg-primary text-white shadow-xs font-semibold'
                         : 'text-on-surface-variant hover:text-on-surface'
@@ -1299,7 +1299,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
                     title="Sempre abre no modo claro para os visitantes"
                   >
                     <Sun className="w-3 h-3" />
-                    <span>Fixar Claro</span>
+                    <span>Claro</span>
                   </button>
 
                   <button
@@ -1310,7 +1310,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
                       setThemeInput(next);
                       setGlobalTheme('dark');
                     }}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all flex items-center gap-1 ${
+                    className={`px-2 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-1 text-center ${
                       displayModeInput === 'dark'
                         ? 'bg-primary text-white shadow-xs font-semibold'
                         : 'text-on-surface-variant hover:text-on-surface'
@@ -1318,7 +1318,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
                     title="Sempre abre no modo escuro para os visitantes"
                   >
                     <Moon className="w-3 h-3" />
-                    <span>Fixar Escuro</span>
+                    <span>Escuro</span>
                   </button>
                 </div>
               </div>

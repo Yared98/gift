@@ -231,13 +231,13 @@ export const SuperAdminUsersTab: React.FC<SuperAdminUsersTabProps> = ({ authToke
       </section>
 
       {/* 2. Whitelist of Pre-approved Emails */}
-      <section className="bg-surface rounded-2xl p-6 sm:p-8 border border-border shadow-paper space-y-5">
+      <section className="bg-surface rounded-2xl p-4 sm:p-6 lg:p-8 border border-border shadow-paper space-y-4 sm:space-y-5">
         <div className="flex items-center gap-2.5 pb-3 border-b border-border">
-          <div className="p-2 rounded-xl bg-primary/10 text-primary">
+          <div className="p-2 rounded-xl bg-primary/10 text-primary shrink-0">
             <Mail className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="font-serif text-xl font-semibold text-on-surface">
+            <h3 className="font-serif text-lg sm:text-xl font-semibold text-on-surface">
               Whitelist de Convidados Pré-aprovados
             </h3>
             <p className="text-xs text-on-surface-variant">
@@ -247,7 +247,7 @@ export const SuperAdminUsersTab: React.FC<SuperAdminUsersTabProps> = ({ authToke
         </div>
 
         {/* Add Email to Whitelist Form */}
-        <form onSubmit={handleAddWhitelist} className="flex gap-2">
+        <form onSubmit={handleAddWhitelist} className="flex flex-col sm:flex-row gap-2">
           <input
             type="email"
             value={newEmail}
@@ -257,7 +257,7 @@ export const SuperAdminUsersTab: React.FC<SuperAdminUsersTabProps> = ({ authToke
           />
           <button
             type="submit"
-            className="px-4 h-10 bg-primary text-white rounded-xl text-xs sm:text-sm font-medium hover:bg-primary-hover transition-all flex items-center gap-1.5 shadow-sm"
+            className="px-4 h-10 bg-primary text-white rounded-xl text-xs sm:text-sm font-medium hover:bg-primary-hover transition-all flex items-center justify-center gap-1.5 shadow-sm w-full sm:w-auto shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>Adicionar E-mail</span>

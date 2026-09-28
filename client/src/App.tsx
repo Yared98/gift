@@ -381,7 +381,7 @@ export function AppContent() {
         isStandalone={isStandalone}
       />
 
-      <main className="flex-1 w-full max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-12 py-8 sm:py-12 space-y-8 sm:space-y-12">
+      <main className="flex-1 w-full max-w-[1360px] mx-auto px-3.5 sm:px-6 lg:px-12 py-5 sm:py-8 lg:py-12 space-y-6 sm:space-y-8 lg:space-y-12">
         {isAdminView ? (
           !currentUser ? (
             <div className="py-12 text-center space-y-4">
@@ -476,7 +476,7 @@ export function AppContent() {
                   </button>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
                   {filteredGifts.map((gift) => (
                     <GiftCard key={gift.id} gift={gift} />
                   ))}

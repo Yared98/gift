@@ -51,11 +51,11 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   ];
 
   return (
-    <section className="bg-surface rounded-2xl p-5 sm:p-6 border border-border shadow-paper space-y-5 transition-colors duration-200">
+    <section className="bg-surface rounded-2xl p-4 sm:p-6 border border-border shadow-paper space-y-4 sm:space-y-5 transition-colors duration-200">
       {/* Search Input, Counter & Sorting */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-border">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3.5 sm:gap-4 pb-3.5 sm:pb-4 border-b border-border">
         {/* Search */}
-        <div className="relative flex-1 max-w-md">
+        <div className="relative flex-1 w-full md:max-w-md">
           <Search className="w-4 h-4 text-on-surface-variant absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
@@ -67,7 +67,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           {search && (
             <button
               onClick={() => onSearchChange('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface p-1"
             >
               <X className="w-4 h-4" />
             </button>
@@ -75,18 +75,18 @@ export const FilterBar: React.FC<FilterBarProps> = ({
         </div>
 
         {/* Counter & Sort */}
-        <div className="flex items-center justify-between md:justify-end gap-4">
-          <div className="text-xs sm:text-sm text-on-surface font-medium flex items-center gap-2">
+        <div className="flex items-center justify-between md:justify-end gap-3 w-full md:w-auto">
+          <div className="text-xs sm:text-sm text-on-surface font-medium flex items-center gap-1.5 shrink-0">
             <span className="w-2 h-2 rounded-full bg-primary inline-block" />
-            <span>{totalFiltered} {totalFiltered === 1 ? 'item encontrado' : 'itens encontrados'}</span>
+            <span>{totalFiltered} {totalFiltered === 1 ? 'item' : 'itens'}</span>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <SlidersHorizontal className="w-3.5 h-3.5 text-on-surface-variant hidden sm:inline" />
             <select
               value={sortOption}
               onChange={(e) => onSortChange(e.target.value as SortOption)}
-              className="h-9 px-3 bg-surface-low border border-border rounded-lg text-xs sm:text-sm text-on-surface focus:outline-none focus:border-primary cursor-pointer"
+              className="h-9 px-2.5 sm:px-3 bg-surface-low border border-border rounded-xl text-xs sm:text-sm text-on-surface focus:outline-none focus:border-primary cursor-pointer"
             >
               <option value="recent">Mais recentes</option>
               <option value="priority">Favoritos primeiro</option>
@@ -99,11 +99,11 @@ export const FilterBar: React.FC<FilterBarProps> = ({
 
       {/* Category Pills */}
       <div className="space-y-2">
-        <span className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Categorias</span>
-        <div className="flex flex-wrap gap-2">
+        <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Categorias</span>
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1 sm:flex-wrap">
           <button
             onClick={() => onCategoryChange('all')}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-medium shrink-0 whitespace-nowrap transition-all ${
               selectedCategory === 'all'
                 ? 'bg-primary text-white shadow-sm'
                 : 'bg-surface-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container border border-border'
@@ -115,7 +115,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           {/* Quick Filter: Favoritos */}
           <button
             onClick={onToggleFavorites}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-medium shrink-0 whitespace-nowrap transition-all flex items-center gap-1.5 ${
               onlyFavorites
                 ? 'bg-favorite text-white shadow-sm ring-2 ring-favorite/40'
                 : 'bg-favorite-subtle text-favorite hover:bg-favorite/15 border border-favorite-border dark:bg-favorite-subtle dark:text-favorite dark:border-favorite/30'
@@ -129,7 +129,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             <button
               key={cat}
               onClick={() => onCategoryChange(cat)}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all ${
+              className={`px-3.5 py-1.5 rounded-full text-xs font-medium shrink-0 whitespace-nowrap transition-all ${
                 selectedCategory === cat
                   ? 'bg-primary text-white shadow-sm'
                   : 'bg-surface-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container border border-border'
@@ -143,13 +143,13 @@ export const FilterBar: React.FC<FilterBarProps> = ({
 
       {/* Price Filter */}
       <div className="space-y-2 pt-2 border-t border-border/60">
-        <span className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Faixa de Preço</span>
-        <div className="flex flex-wrap gap-1.5">
+        <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Faixa de Preço</span>
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1 sm:flex-wrap">
           {priceOptions.map((opt) => (
             <button
               key={opt.value}
               onClick={() => onPriceChange(opt.value)}
-              className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
+              className={`px-2.5 py-1 rounded-lg text-xs font-medium shrink-0 whitespace-nowrap transition-all ${
                 selectedPrice === opt.value
                   ? 'bg-emerald-100/90 text-emerald-950 border border-emerald-300 font-semibold dark:bg-primary/20 dark:text-primary dark:border-primary/40'
                   : 'bg-surface-low text-on-surface-variant hover:bg-surface-container border border-border'

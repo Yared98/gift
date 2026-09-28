@@ -37,9 +37,9 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header className="sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-border shadow-paper transition-colors duration-200">
-      <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-12 flex justify-between items-center h-20">
+      <div className="max-w-[1360px] mx-auto px-3.5 sm:px-6 lg:px-12 flex justify-between items-center h-16 sm:h-20">
         {/* Brand & Privacy Status */}
-        <div className="flex items-center gap-3 sm:gap-4">
+        <div className="flex items-center gap-2.5 sm:gap-4 min-w-0">
           <button 
             onClick={() => {
               if (isAdmin) {
@@ -48,13 +48,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 window.location.href = '/';
               }
             }}
-            className="text-left group"
+            className="text-left group min-w-0"
           >
-            <h1 className="font-serif text-2xl sm:text-3xl font-medium tracking-tight text-primary group-hover:opacity-90 transition-opacity">
+            <h1 className="font-serif text-lg xs:text-xl sm:text-2xl lg:text-3xl font-medium tracking-tight text-primary group-hover:opacity-90 transition-opacity truncate max-w-[140px] xs:max-w-[200px] sm:max-w-none">
               {!title || title === 'Minha Lista de Presentes' ? (
                 <>
                   Minha Lista de{' '}
-                  <span className="font-cursive text-3xl sm:text-4xl text-accent-amber font-normal inline-block transform -rotate-1">
+                  <span className="font-cursive text-2xl xs:text-3xl sm:text-4xl text-accent-amber font-normal inline-block transform -rotate-1">
                     Presentes
                   </span>
                 </>
@@ -64,7 +64,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </h1>
           </button>
           
-          <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-low border border-border text-on-surface-variant text-xs font-medium">
+          <span className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-low border border-border text-on-surface-variant text-xs font-medium shrink-0">
             <Lock className="w-3.5 h-3.5 text-primary" />
             {isLandingPage ? 'Espaço Privado' : 'Link Privado'}
           </span>
@@ -89,13 +89,13 @@ export const Navbar: React.FC<NavbarProps> = ({
         )}
 
         {/* Actions: Theme Toggle, Share, Auth/Admin */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
           {/* Theme Toggle (Dark / Light) */}
           <button
             onClick={toggleTheme}
             title={theme === 'dark' ? 'Ativar modo claro' : 'Ativar modo escuro'}
             aria-label="Alternar tema de cores"
-            className="p-2 sm:px-3 sm:py-2 rounded-lg bg-surface-low border border-border text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all flex items-center gap-2 text-xs font-medium"
+            className="p-2 sm:px-2.5 sm:py-2 rounded-xl bg-surface-low border border-border text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all flex items-center gap-1.5 text-xs font-medium"
           >
             {theme === 'dark' ? (
               <>
@@ -116,10 +116,10 @@ export const Navbar: React.FC<NavbarProps> = ({
               type="button"
               onClick={onOpenInstallModal}
               title="Instalar aplicativo no celular"
-              className="p-2 sm:px-3 sm:py-2 rounded-lg bg-surface-low border border-border text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all flex items-center gap-1.5 text-xs font-medium"
+              className="p-2 sm:px-2.5 sm:py-2 rounded-xl bg-surface-low border border-border text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all flex items-center gap-1.5 text-xs font-medium"
             >
               <Smartphone className="w-4 h-4 text-primary" />
-              <span className="hidden sm:inline">Instalar App</span>
+              <span className="hidden md:inline">Instalar App</span>
             </button>
           )}
 
@@ -127,12 +127,13 @@ export const Navbar: React.FC<NavbarProps> = ({
           {!isAdmin && !isLandingPage && (
             <button
               onClick={handleCopyLink}
-              className="inline-flex items-center gap-2 bg-surface-low border border-border text-on-surface px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium hover:bg-surface-container transition-all active:scale-[0.98]"
+              title="Copiar link secreto da lista"
+              className="inline-flex items-center gap-1.5 bg-surface-low border border-border text-on-surface p-2 sm:px-3.5 sm:py-2 rounded-xl text-xs sm:text-sm font-medium hover:bg-surface-container transition-all active:scale-[0.98]"
             >
               {copied ? (
                 <>
                   <Check className="w-4 h-4 text-primary" />
-                  <span className="text-primary font-semibold">Copiado!</span>
+                  <span className="text-primary font-semibold hidden sm:inline">Copiado!</span>
                 </>
               ) : (
                 <>
@@ -147,25 +148,27 @@ export const Navbar: React.FC<NavbarProps> = ({
           {currentUser ? (
             <button
               onClick={onToggleAdmin}
-              className={`inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all active:scale-[0.98] ${
+              className={`inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all active:scale-[0.98] ${
                 isAdmin
                   ? 'bg-surface-container text-on-surface hover:bg-border'
                   : 'bg-primary text-white hover:bg-primary-hover shadow-sm'
               }`}
             >
-              <div className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-bold">
+              <div className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-bold shrink-0">
                 {currentUser.name.charAt(0).toUpperCase()}
               </div>
-              <span>{isAdmin ? 'Ver Lista Pública' : 'Meu Painel'}</span>
+              <span className="sm:hidden">{isAdmin ? 'Ver Lista' : 'Painel'}</span>
+              <span className="hidden sm:inline">{isAdmin ? 'Ver Lista Pública' : 'Meu Painel'}</span>
             </button>
           ) : (
             /* If Not Logged In: Entrar com Google */
             <button
               onClick={onOpenAuth}
-              className="inline-flex items-center gap-2 bg-primary text-white hover:bg-primary-hover px-3.5 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium shadow-sm transition-all active:scale-[0.98]"
+              className="inline-flex items-center gap-1.5 sm:gap-2 bg-primary text-white hover:bg-primary-hover px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium shadow-sm transition-all active:scale-[0.98]"
             >
               <LogIn className="w-4 h-4" />
-              <span>Entrar / Criar Lista</span>
+              <span className="sm:hidden">Entrar</span>
+              <span className="hidden sm:inline">Entrar / Criar Lista</span>
             </button>
           )}
         </div>
