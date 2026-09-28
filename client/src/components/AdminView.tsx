@@ -560,55 +560,55 @@ export const AdminView: React.FC<AdminViewProps> = ({
         </div>
       </div>
 
-      {/* Main Admin Navigation Tabs (Single row, responsive scroll on mobile, no broken wrap) */}
-      <div className="w-full sm:w-auto inline-flex items-center gap-1.5 p-1.5 bg-surface rounded-2xl border border-border shadow-sm overflow-x-auto no-scrollbar scroll-smooth">
+      {/* Main Admin Navigation Tabs — 2-col grid on mobile, flex row on sm+ */}
+      <div className="grid grid-cols-2 sm:flex sm:flex-wrap sm:items-center gap-1.5 p-1.5 bg-surface rounded-2xl border border-border shadow-sm">
         <button
           onClick={() => setActiveTab('gifts')}
-          className={`flex items-center gap-2 py-2 px-3.5 sm:px-4 rounded-xl text-xs sm:text-sm font-medium shrink-0 whitespace-nowrap transition-all ${
+          className={`flex items-center justify-center gap-2 py-2 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-medium transition-all ${
             activeTab === 'gifts'
               ? 'bg-primary text-white shadow-sm'
               : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-low'
           }`}
         >
           <GiftIcon className="w-4 h-4 shrink-0" />
-          <span>Meus Presentes ({gifts.length})</span>
+          <span className="truncate">Presentes ({gifts.length})</span>
         </button>
 
         <button
           onClick={() => setActiveTab('interests')}
-          className={`flex items-center gap-2 py-2 px-3.5 sm:px-4 rounded-xl text-xs sm:text-sm font-medium shrink-0 whitespace-nowrap transition-all ${
+          className={`flex items-center justify-center gap-2 py-2 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-medium transition-all ${
             activeTab === 'interests'
               ? 'bg-primary text-white shadow-sm'
               : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-low'
           }`}
         >
           <HeartHandshake className="w-4 h-4 shrink-0" />
-          <span>Gostos & Inspirações</span>
+          <span className="truncate">Gostos & Inspo</span>
         </button>
 
         <button
           onClick={() => setActiveTab('profile')}
-          className={`flex items-center gap-2 py-2 px-3.5 sm:px-4 rounded-xl text-xs sm:text-sm font-medium shrink-0 whitespace-nowrap transition-all ${
+          className={`flex items-center justify-center gap-2 py-2 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-medium transition-all ${
             activeTab === 'profile'
               ? 'bg-primary text-white shadow-sm'
               : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-low'
           }`}
         >
           <SettingsIcon className="w-4 h-4 shrink-0" />
-          <span>Meu Link & Perfil</span>
+          <span className="truncate sm:whitespace-nowrap">Link & Perfil</span>
         </button>
 
         {isSuperAdmin && (
           <button
             onClick={() => setActiveTab('users')}
-            className={`flex items-center gap-2 py-2 px-3.5 sm:px-4 rounded-xl text-xs sm:text-sm font-medium shrink-0 whitespace-nowrap transition-all ${
+            className={`flex items-center justify-center gap-2 py-2 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-medium transition-all ${
               activeTab === 'users'
                 ? 'bg-primary text-white shadow-sm'
                 : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-low'
             }`}
           >
             <Users className="w-4 h-4 shrink-0" />
-            <span>Usuários & Convites</span>
+            <span className="truncate sm:whitespace-nowrap">Usuários</span>
           </button>
         )}
       </div>
